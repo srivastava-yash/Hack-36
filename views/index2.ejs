@@ -1,0 +1,16 @@
+
+<%include ./partials/header2.ejs%>
+<div class="ui container segment">
+<%blogs.forEach(function(blog){%>
+<div>
+<div class="ui huge header"><%=blog.title%></div>
+<div class="item">
+<img class="ui centered" src="<%=blog.image%>">
+<div class="content"><span><%=blog.created.toDateString()%></span></div>
+<div class="description"><p><%=blog.body.substring(0,100)%>....</p></div>
+<a href="/blogs/<%=blog._id%>">Read More</a>
+</div>
+</div>
+<%})%>
+</div>
+<%include ./partials/footer.ejs%>

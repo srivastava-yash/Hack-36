@@ -65,6 +65,7 @@ app.get("/register",function(req,res){
   res.render("register");
 });
 
+
 app.post("/register",function(req,res){
   //register() method from local mongoose it will interact with the database
 
@@ -111,6 +112,121 @@ app.get("/logout",function(req,res){
   res.redirect("/");
 });
 
-app.listen(3000,function(){
+
+// ___________________________________________________________________________________________________________________________
+
+
+//mongoose/model Config
+mongoose.connect("mongodb://localhost/automobili");
+
+var blogSchema = new mongoose.Schema({
+    title:String,
+    image:String,
+    body:String,
+    created:{type:Date,default:Date.now}
+});
+
+var blog = mongoose.model("blog",blogSchema);
+
+blog.create({
+    title:"Lamborghini Urus",
+    image:"https://www.autocar.co.uk/sites/autocar.co.uk/files/styles/gallery_slide/public/1-lamborghini-urus-review-hero-front.jpg?itok=4hqEvI9O",
+    body:"A super sports car soul and the functionality typical for an SUV: this is Lamborghini Urus, the world’s first Super Sport Utility Vehicle. Identifiable as an authentic Lamborghini with its unmistakable DNA, Urus is at the same time a groundbreaking car: the extreme proportions, the pure Lamborghini design and the outstanding performance make it absolutely unique. Urus’ distinctive silhouette with a dynamic flying coupé line shows its super sports origins, while its outstanding proportions convey strength, solidity and safety. Urus’ success factors are definitely the design, the driving dynamics and the performance. All these features allowed Lamborghini to launch a Super Sport Utility Vehicle remaining loyal to its DNA."
+});
+
+
+//index Route
+// app.get("/",function(req,res){
+//     res.redirect("/blogs");
+// });
+
+app.get("/blogs",function(req,res){
+    blog.find({},function(err,blogs){
+        if(err)
+        {
+            console.log("ERROR");
+        }
+        else{
+            res.render("index2.ejs",{blogs:blogs});
+        }
+      
+    });
+});
+
+//new Route
+app.get("/blogs/new",function(req,res){
+    res.render("new2.ejs");
+
+});
+
+app.post("/blogs",function(req,res){
+    blog.create(req.body.blog,function(err,newblog){
+        if(err){
+            res.render("new2.ejs");
+        }
+        else{
+            res.redirect("/blogs");
+        }
+
+    });
+});
+
+//show route
+
+app.get("/blogs/:id",function(req,res){
+     blog.findById(req.params.id,function(err,foundblog){
+         if(err){
+               res.redirect("/blogs");
+         }
+         else{
+         res.render("show2.ejs",{blog:foundblog});
+         }     
+    });
+});
+
+//edit route
+app.get("/blogs/:id/edit",function(req,res){
+    blog.findById(req.params.id,function(err,foundblog){
+          if(err){
+              res.redirect("/blogs");
+          }
+          else{
+              res.render("edit2.ejs",{blog:foundblog});
+          }
+    });
+});
+
+//update route
+ app.put("/blogs/:id",function(req,res){
+     blog.findByIdAndUpdate(req.params.id,req.body.blog,function(err,updateblog){
+         if(err){
+             res.render("/blogs");
+         }
+         else{
+             res.redirect("/blogs/"+req.params.id);
+         }
+     });
+ });
+
+//delete route
+app.delete("/blogs/:id",function(req,res){
+    blog.findByIdAndRemove(req.params.id,function(err){
+    if(err){
+        res.redirect("/blogs");
+    }
+    else{
+        res.redirect("/blogs");
+    }
+});
+});
+
+
+
+// ___________________________________________________________________________________________________________________________
+
+
+
+
+app.listen(5000,function(){
   console.log("server on 3000");
 });
