@@ -1,15 +1,36 @@
 <% include ./partials/header2.ejs %>
+
+<script>
+function captureFile(event) { 
+    event.preventDefault()
+
+    const file = event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArra*-yBuffer(file)
+    reader.onlooked = () => {
+        this.setState({ buffer: Buffer(reader.result) })
+    }
+}
+
+function onSubmit(event){
+    event.preventDefault()
+    console.log("Submitting the form...")
+    
+}
+
+}
+</script>
 <div class="ui main text container segment">
     <div class="ui huge header">New Report</div>
 
-    <form action="/blogs" method="POST" class="ui form">
+    <form onsubmit={this.onSubmit} action="/blogs" method="POST" class="ui form">
         <div class="field">
             <label>Title:</label>
-            <input type="text" name="blog[title]" placeholder="title">
+            <input type="text" onChange={this.findText} name="blog[title]" placeholder="title">
         </div>
         <div class="field">
             <label>Medical Report:</label>
-            <input type="file" name="blog[image]" placeholder="Medical Report">
+            <input type="file" onChange={this.captureFile} name="blog[image]" placeholder="Medical Report">
         </div>
         <div class="field">
             <label>Content</label>
